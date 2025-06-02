@@ -1,6 +1,7 @@
 % Test against phipade and other algorithms.
 
 addpath('replication')
+anymatrix scan
 rng default
 format compact 
 
