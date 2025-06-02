@@ -24,6 +24,14 @@ function [c,est] = funm_condest1(A,fun,fun_frechet,flag1,varargin)
 %    Note: this function makes an assumption on the adjoint of the
 %    Frechet derivative that, for f having a power series expansion,
 %    is equivalent to the series having real coefficients.
+%
+%    The function is taken from 
+%    Nicholas J. Higham. The Matrix Function Toolbox. http://www.
+%    maths.manchester.ac.uk/~higham/mftoolbox. (link no longer working).
+%    Reference:
+%    Algorithm 3.22 in N. J. Higham, Functions of Matrices: Theory and Computation, 
+%    Society for Industrial and Applied Mathematics, Philadelphia, PA, USA, 2008.
+
 
 if nargin < 3 || isempty(fun_frechet), fte_diff = 1; else fte_diff = 0; end
 if nargin < 4 || isempty(flag1), flag1 = 0; end
