@@ -12,7 +12,7 @@ The directory `replication/` contains required subroutines for reproducing the r
 
 ## Replicating the results
 
-To reproduce the results in the paper, the following MATLAB toolboxs need to be installed:
+To reproduce the results in the paper, the following MATLAB toolboxes need to be installed:
 
 - [Advanpix Multiprecision Computing Toolbox](https://www.advanpix.com)
 
