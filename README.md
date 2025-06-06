@@ -2,11 +2,12 @@
 
 This repository contains the code used in the technical report:
 
-A. H. Al-Mohy and X. Liu. *Computing matrix $\varphi$-functions arising in exponential integrators*, June 2025.
+A. H. Al-Mohy and X. Liu. [*Computing matrix $\varphi$-functions arising in exponential integrators*](https://arxiv.org/abs/2506.01193). 
+ArXiv:2506.01193 [math.NA], June 2025.
 
 The code was tested in MATLAB 2024b. 
 
-The main function `phi_funm.m` computes phi-functions of a matrix for given indices and the script `simple_test.m` runs a simple test.
+The main function `phi_funm.m` computes phi-functions of a matrix for given indices, and the script `simple_test.m` runs a simple test.
 The directory `replication/` contains required subroutines for reproducing the results in the paper.
 
 

@@ -24,7 +24,7 @@ function [X,s,m,cost] = phi_funm(A,varargin)
 % Reference:
 %
 %    Awad H. Al-Mohy and Xiaobo Liu. Computing Matrix $\varphi$-Functions 
-%    Arising in Exponential Integrators.
+%    Arising in Exponential Integrators. ArXiv:2506.01193 [math.NA], June 2025.
 %
 % Version Date: June 1, 2025
 
@@ -142,7 +142,7 @@ function [m, s, tau, cost] = select_parameters_phi(A,p)
 % References:
 %
 % [1] Awad H. Al-Mohy and Xiaobo Liu. Computing Matrix $\varphi$-Functions 
-%        Arising in Exponential Integrators.
+%        Arising in Exponential Integrators. ArXiv:2506.01193 [math.NA], June 2025.
 % [2] Massimiliano Fasi. Optimality of the Paterson–Stockmeyer method for 
 %        evaluating matrix polynomials and rational matrix functions. 
 %        Linear Algebra Appl., 574:182–200, 2019.
