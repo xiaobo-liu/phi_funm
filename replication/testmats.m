@@ -8,7 +8,7 @@ function [A, n_mats] = testmats(k, n)
         A = n_mats; % total number of matrices
         return;
     end
-    if nargin == 2
+    if nargin == 1
         n = 20;
     end
 

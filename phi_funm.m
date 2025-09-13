@@ -76,7 +76,7 @@ if recomputeDiagsExpLow
     Rm(:,:,1) = Rm(:,:,1).';
 end
 
-flipcoef = 1./flip(coef);
+if s>0, flipcoef = 1./flip(coef); end
 for i=1:s 
     for j=p:-1:1 
         Rm(:,:,j+1) = (Rm(:,:,1)*Rm(:,:,j+1) + ...
