@@ -1,10 +1,12 @@
-% Test against phipade and other algorithms.
+% Test execution time against phipade.
 
-addpath('replication', 'data')
-anymatrix scan
+% Create directories to store the results, if not exist
+if ~exist('figs', 'dir'), mkdir('figs'); end
+if ~exist('data', 'dir'), mkdir('data'); end
+
+addpath('data','replication','figs')
+
 rng default
-format compact 
-warning off 
 
 pp = [1 4 7 10]; % here for p > 0  
 pmax = max(pp);
@@ -109,23 +111,23 @@ load(dataname);
 perm_dft1 = perm_dft;
 perm_opt1 = perm_opt;
 
-plot(1:num_mats, ones(1,num_mats), '--', 'LineWidth', 2);
-hold on
-for i=1:num_nn
+for i=num_nn:-1:1
     n = nn(i);
     dataname = sprintf('data/time_%d.mat', n);
     load(dataname);
-    plot(1:num_mats, time_ratio_dft(perm_dft1), '-s', 'LineWidth', lg_lindwidth, ...
+    plot(1:num_mats, log2(1./time_ratio_dft(perm_dft1)), '-s', 'LineWidth', lg_lindwidth, ...
         'MarkerSize', lg_markersize);
+    hold on
 end
+plot(1:num_mats, zeros(1,num_mats), '--', 'LineWidth', 2.5);
 hold off
 
-timelegend1 = sprintf('time[n=%d]', nn(1));
-timelegend2 = sprintf('time[n=%d]', nn(2));
-timelegend3 = sprintf('time[n=%d]', nn(3));
+timelegend1 = sprintf('$n=%d$', nn(1));
+timelegend2 = sprintf('$n=%d$', nn(2));
+timelegend3 = sprintf('$n=%d$', nn(3));
 
-legend('ratio=1', timelegend1, timelegend2, timelegend3, 'interpreter', 'latex', ...
-    'Location', 'NE', 'FontSize', lg_fontsize);
+legend(timelegend3, timelegend2, timelegend1, 'interpreter', 'latex', ...
+    'Location', 'NW', 'FontSize', lg_fontsize);
 set(gca,'linewidth',axlabel_lindwidth)
 set(gca,'fontsize',axlabel_fontsize)
 xlim([1,num_mats]);
@@ -133,31 +135,36 @@ xticks([1 10:10:50 num_mats]);
 % title(sprintf('ratio of time: \\texttt{phi\\_funm}/\\texttt{phipade\\_dft}'), ...
         % 'FontSize', title_fontsize, 'Interpreter', 'latex');
 grid on;
+
+ylabel('$\log_2$ scale', 'interpreter', 'latex', 'FontSize', 1.5*lg_fontsize);
        
 % ylim([0 1])
-figname = sprintf('data/time_dft.eps');
+% yticks([0 0.2 0.4 0.8 1 1.25 2.5]);
+
+figname = sprintf('figs/time_dft.eps');
 exportgraphics(gca, figname, 'ContentType', 'vector');
 
 %% figure for time ratio phi_funm / phipade_opt
 
 figure(2)
-plot(1:num_mats, ones(1,num_mats), '--', 'LineWidth', 2);
-hold on
-for i=1:num_nn
+
+for i=num_nn:-1:1
     n = nn(i);
     dataname = sprintf('data/time_%d.mat', n);
     load(dataname);
-    plot(1:num_mats, time_ratio_opt(perm_opt1), '-s', 'LineWidth', lg_lindwidth, ...
+    plot(1:num_mats, log2(1./time_ratio_opt(perm_opt1)), '-s', 'LineWidth', lg_lindwidth, ...
         'MarkerSize', lg_markersize);
+    hold on
 end
+plot(1:num_mats, zeros(1,num_mats), '--', 'LineWidth', 2.5);
 hold off
 
-timelegend1 = sprintf('time[n=%d]', nn(1));
-timelegend2 = sprintf('time[n=%d]', nn(2));
-timelegend3 = sprintf('time[n=%d]', nn(3));
+timelegend1 = sprintf('$n=%d$', nn(1));
+timelegend2 = sprintf('$n=%d$', nn(2));
+timelegend3 = sprintf('$n=%d$', nn(3));
 
-legend('ratio=1', timelegend1, timelegend2, timelegend3, 'interpreter', 'latex', ...
-    'Location', 'NE', 'FontSize', lg_fontsize);
+legend(timelegend3, timelegend2, timelegend1, 'interpreter', 'latex', ...
+    'Location', 'NW', 'FontSize', lg_fontsize);
 set(gca,'linewidth',axlabel_lindwidth)
 set(gca,'fontsize',axlabel_fontsize)
 xlim([1,num_mats]);
@@ -167,5 +174,7 @@ xticks([1 10:10:50 num_mats]);
 grid on;
        
 % ylim([0 1])
-figname = sprintf('data/time_opt.eps');
+% yticks([0 0.25 0.5 0.8 1 1.25 2]);
+
+figname = sprintf('figs/time_opt.eps');
 exportgraphics(gca, figname, 'ContentType', 'vector');

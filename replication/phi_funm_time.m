@@ -1,9 +1,11 @@
 function [X,s,m,cost,runtime] = phi_funm_time(A,varargin)
-%PHI_FUNM Compute phi functions of a matrix for given indices.
+%PHI_FUNM_TIME Compute phi functions of a matrix for given indices with
+%code profiling outputs.
 %
 %   X = PHI_FUNM(A, idx1, idx2, ..., idxN) computes the phi 
 %   functions of the matrix A for the indices specified in 
 %                      idx1, idx2, ..., idxN. 
+% PHI_FUNM calls EXPM iff the requested index equals 0 (and only for that entry).
 %   The output X is a cell array containing the matrices corresponding to 
 %   each index.
 %
@@ -27,16 +29,15 @@ function [X,s,m,cost,runtime] = phi_funm_time(A,varargin)
 %
 % Reference:
 %
-%    Awad H. Al-Mohy and Xiaobo Liu. Computing Matrix $\varphi$-Functions 
-%    Arising in Exponential Integrators. ArXiv:2506.01193 [math.NA], June 2025.
+%    Awad H. Al-Mohy and Xiaobo Liu. A Scaling and Recovering Algorithm for
+%    the Matrix $\varphi$-Functions. 
 %
-% Version Date: June 1, 2025
+% Version Date: September 23, 2025
 
 indices = [varargin{:}];
 p = max(indices); 
-if p == 0
-    error('Use the MATLAB built-in function expm for computing \varphi_0(A) = e^A.');
-end
+if p == 0, X{1} = expm(A); return, end % compute phi_0(A) directly via expm.
+
 % Check if A is in upper or lower Schur form
 recomputeDiagsExpUp  = matlab.internal.math.isschur(A);
 
@@ -96,8 +97,7 @@ if recomputeDiagsExpLow
     runtime(2) = runtime(2) + toc(eval_time);
 end
 
-
-if s>0, flipcoef = 1./flip(coef); end
+flipcoef = 1./flip(coef);
 for i=1:s
     recv_time = tic;
     for j=p:-1:1 

@@ -1,9 +1,12 @@
-% Test against phipade and other algorithms.
+% Test accuracy and cost against phipade and other algorithms.
 
-addpath('replication')
-anymatrix scan
+% Create directories to store the results, if not exist
+if ~exist('figs', 'dir'), mkdir('figs'); end
+if ~exist('data', 'dir'), mkdir('data'); end
+
+addpath('data','replication','figs')
+
 rng default
-format compact 
 
 pp = [1 4 7 10]; % here for p > 0  
 pmax = max(pp);
@@ -157,6 +160,9 @@ xticks([1 20:20:100 num_mats]);
 ylim([1e-18 1])
 yticks(10.^(-18:3:0))
 
+figname = sprintf('figs/error_p_0.eps');
+exportgraphics(gca, figname, 'ContentType', 'vector');
+
 % performance profile
 figure(2)
 ratio_max = 12;   
@@ -173,6 +179,8 @@ set(legend, 'Location', 'southeast');
 set(gca,'linewidth', axlabel_lindwidth)
 set(gca,'fontsize', axlabel_fontsize)
 
+figname = sprintf('figs/perfprof_p_0.eps');
+exportgraphics(gca, figname, 'ContentType', 'vector');
 
 %% p > 0
 for j=1:num_pp
@@ -219,6 +227,9 @@ for j=1:num_pp
     
     ylim([1e-18 1])
     yticks(10.^(-18:3:0))
+    
+    figname = sprintf('figs/error_p_%d.eps', pp(j));
+    exportgraphics(gca, figname, 'ContentType', 'vector');
 
     % performance profile
     figure(2*j+2)
@@ -236,10 +247,12 @@ for j=1:num_pp
     set(legend, 'Location', 'southeast');
     set(gca,'linewidth', axlabel_lindwidth)
     set(gca,'fontsize', axlabel_fontsize)
-
+    
+    figname = sprintf('figs/perfprof_p_%d.eps', pp(j));
+    exportgraphics(gca, figname, 'ContentType', 'vector');
 end
 
-% figure for cost ratio
+%% figure for cost ratio
 figure(11)  
     
 cost_ratio_dft = cost_phifunc ./ cost_phipade_dft;
@@ -257,6 +270,10 @@ ylim([0 1])
 
 % title(sprintf('ratio of cost: \\texttt{phi\\_funm}/\\texttt{phipade\\_dft}'), 'FontSize', title_fontsize, 'Interpreter', 'latex');
 
+figname = sprintf('figs/cost_dft_p_10.eps');
+exportgraphics(gca, figname, 'ContentType', 'vector');
+
+
 figure(12)  
     
 cost_ratio_opt = cost_phifunc ./ cost_phipade_opt;
@@ -273,7 +290,11 @@ xticks([1 20:20:100 num_mats]);
 ylim([0 1])
 % title(sprintf('ratio of cost: \\texttt{phi\\_funm}/\\texttt{phipade\\_opt}'), 'FontSize', title_fontsize, 'Interpreter', 'latex');
 
-% figure for time ratio
+figname = sprintf('figs/cost_opt_p_10.eps');
+exportgraphics(gca, figname, 'ContentType', 'vector');
+
+
+%% figure for time ratio
 figure(13)  
     
 time_ratio_dft = time_phifunc ./ time_phipade_dft;

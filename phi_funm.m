@@ -4,6 +4,7 @@ function [X,s,m,cost] = phi_funm(A,varargin)
 %   X = PHI_FUNM(A, idx1, idx2, ..., idxN) computes the phi 
 %   functions of the matrix A for the indices specified in 
 %                      idx1, idx2, ..., idxN. 
+% PHI_FUNM calls EXPM iff the requested index equals 0 (and only for that entry).
 %   The output X is a cell array containing the matrices corresponding to 
 %   each index.
 %
@@ -23,16 +24,15 @@ function [X,s,m,cost] = phi_funm(A,varargin)
 %
 % Reference:
 %
-%    Awad H. Al-Mohy and Xiaobo Liu. Computing Matrix $\varphi$-Functions 
-%    Arising in Exponential Integrators. ArXiv:2506.01193 [math.NA], June 2025.
+%    Awad H. Al-Mohy and Xiaobo Liu. A Scaling and Recovering Algorithm for
+%    the Matrix $\varphi$-Functions. 
 %
-% Version Date: June 1, 2025
+% Version Date: September 23, 2025
 
 indices = [varargin{:}];
 p = max(indices); 
-if p == 0
-    error('Use the MATLAB built-in function expm for computing \varphi_0(A) = e^A.');
-end
+if p == 0, X{1} = expm(A); return, end % compute phi_0(A) directly via expm.
+
 % Check if A is in upper or lower Schur form
 recomputeDiagsExpUp  = matlab.internal.math.isschur(A);
 
@@ -76,7 +76,7 @@ if recomputeDiagsExpLow
     Rm(:,:,1) = Rm(:,:,1).';
 end
 
-if s>0, flipcoef = 1./flip(coef); end
+flipcoef = 1./flip(coef);
 for i=1:s 
     for j=p:-1:1 
         Rm(:,:,j+1) = (Rm(:,:,1)*Rm(:,:,j+1) + ...
@@ -141,8 +141,8 @@ function [m, s, tau, cost] = select_parameters_phi(A,p)
 %
 % References:
 %
-% [1] Awad H. Al-Mohy and Xiaobo Liu. Computing Matrix $\varphi$-Functions 
-%        Arising in Exponential Integrators. ArXiv:2506.01193 [math.NA], June 2025.
+% [1] Awad H. Al-Mohy and Xiaobo Liu. A Scaling and Recovering Algorithm for
+%        the Matrix $\varphi$-Functions. 
 % [2] Massimiliano Fasi. Optimality of the Paterson–Stockmeyer method for 
 %        evaluating matrix polynomials and rational matrix functions. 
 %        Linear Algebra Appl., 574:182–200, 2019.
@@ -490,7 +490,7 @@ if isequal(A,abs(A))
     c = norm(e,inf);
     mv = m;
 else
-    [c,v,w,it] = normest1(@afun_power,t);
+    [c,~,~,it] = normest1(@afun_power,t);
     mv = it(2)*t*m;
 end
 
@@ -503,7 +503,7 @@ end
           Z = isreal(A);
        else
 
-          [p,q] = size(X);
+          p = size(X,1);
           if p ~= n, error('Dimension mismatch'), end
 
           if isequal(flag,'notransp')

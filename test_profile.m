@@ -1,8 +1,12 @@
-addpath('data','replication');
-warning off
+% Code profiling of phi_funm.
+
+% Create directories to store the results, if not exist
+if ~exist('figs', 'dir'), mkdir('figs'); end
+if ~exist('data', 'dir'), mkdir('data'); end
+
+addpath('data','replication','figs')
 
 rng default
-format compact 
 
 nn = [20, 200, 500, 2500];
 num_nn = length(nn);

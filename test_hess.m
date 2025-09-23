@@ -1,11 +1,15 @@
-addpath('data','replication');
-warning off
+% Test on Hessenberg matrices.
+
+% Create directories to store the results, if not exist
+if ~exist('figs', 'dir'), mkdir('figs'); end
+if ~exist('data', 'dir'), mkdir('data'); end
+
+addpath('data','replication','figs')
 
 rng default
-format compact 
 
-mats_id = {'bcspwr10', 'gr_30_30', 'helm2d03', 'orani678', 'poisson20', 'poisson99'};
-num_mat = 6;
+mats_id = {'bcspwr10', 'gr_30_30', 'helm2d03', 'orani678', 'poisson99'};
+num_mat = 5;
 
 mm = [30, 80];
 num_mm = length(mm);
@@ -14,9 +18,9 @@ pp = [1 4];
 num_pp = length(pp);
 
 
-time_phifunc = zeros(num_mat, num_mm, num_pp);
-time_phipade_dft = zeros(num_mat, num_mm, num_pp);
-time_phipade_opt = zeros(num_mat, num_mm, num_pp);
+cost_phifunc = zeros(num_mat, num_mm, num_pp);
+cost_phipade_dft = zeros(num_mat, num_mm, num_pp);
+cost_phipade_opt = zeros(num_mat, num_mm, num_pp);
 
 error_phifunc = zeros(num_mat, num_mm, num_pp);
 error_phipade_dft = zeros(num_mat, num_mm, num_pp);
@@ -42,9 +46,6 @@ for i = 1:num_mat
             A = mat.Problem.A;
 
         case 5
-            A = - anymatrix('gallery/poisson', 20);
-
-        case 6
             A = - 2500 * anymatrix('gallery/poisson', 99);
 
     end
@@ -73,38 +74,33 @@ for i = 1:num_mat
 
             p = pp(k);
 
-            tic;
-            X_phifunc_cell = phi_funm(H, p);
-            time_phifunc(i,j,k) = toc;
+            [X_phifunc_cell, ~, ~, cost_phifunc(i,j,k)] = phi_funm(H, p);
             X_phifunc(k,:,:) = cell2mat(X_phifunc_cell);
-
-            % phipade degree and scaling optimized for cost 
-            deg_phipade = select_deg_phipade(H, p);
-            
+         
             dft_deg_phipade = 7; % phipade default degree is m = 7
 
             if p==1
-                tic;
+                
+                % phipade degree and scaling optimized for cost
+                [deg_phipade, cost_phipade_opt(i,j,k)] = select_deg_phipade(H, p);
                 G1 = phipade(H, p, deg_phipade); 
-                time_phipade_opt(i,j,k) = toc;
                 X_phipade_opt(k,:,:) = G1;
   
-                tic;
+             
                 F1 = phipade(H, p, dft_deg_phipade); 
-                time_phipade_dft(i,j,k) = toc;
-                
+                cost_phipade_dft(i,j,k) = phipade_default_cost(H, p);
+
                 X_phipade_dft(k,:,:) = F1;
 
             else % p = 4
 
-                tic;
+                % phipade degree and scaling optimized for cost
+                [deg_phipade, cost_phipade_opt(i,j,k)] = select_deg_phipade(H, p);
                 [G1, G2, G3, G4] = phipade(H, p, deg_phipade); 
-                time_phipade_opt(i,j,k) = toc;
                 X_phipade_opt(k,:,:) = G4;
  
-                tic;
                 [F1, F2, F3, F4] = phipade(H, p, dft_deg_phipade); 
-                time_phipade_dft(i,j,k) = toc;
+                cost_phipade_dft(i,j,k) = phipade_default_cost(H, p);
                 
                 X_phipade_dft(k,:,:) = F4;
    
@@ -121,7 +117,7 @@ end
 
 filename = fullfile(pwd, 'data', 'test_hess.mat');
 save(filename, 'mats_id', 'num_mat', 'mm', 'num_mm', 'pp', 'num_pp', ...
-    'time_phifunc', 'time_phipade_dft', 'time_phipade_opt', ...
+    'cost_phifunc', 'cost_phipade_dft', 'cost_phipade_opt', ...
     'error_phifunc', 'error_phipade_dft', 'error_phipade_opt');
 
 fprintf('Producing the results took %.2f minutes.\n', toc(main_loop)/60);
