@@ -1,6 +1,6 @@
 # A Scaling and Recovering Algorithm for the Matrix $\varphi$-Functions
 
-This repository contains the code used in the technical report:
+This repository contains the algorithm developed in the technical report:
 
 A. H. Al-Mohy and X. Liu. [*A scaling and recovering algorithm for the matrix φ-functions*](https://arxiv.org/abs/2506.01193). ArXiv:2506.01193 [math.NA], September 2025.
 
