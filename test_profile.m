@@ -38,7 +38,7 @@ for i = 1:num_mat
           case 2
             A = anymatrix('gallery/triw', n, -2);  % upper triangular matrix
           case 3
-            A = anymatrix('core/vand', n);         % Vandermonde matrix
+            A = anymatrix('gallery/smoke', n);         % Smoke matrix
         end
 
         [X, s, m, cost, runtime] = phi_funm_time(A, pp);
